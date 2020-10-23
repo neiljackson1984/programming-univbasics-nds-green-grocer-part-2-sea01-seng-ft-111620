@@ -1,9 +1,8 @@
 require_relative './part_1_solution.rb'
-require 'pry'
 
 def apply_coupons(cart, coupons)
   i=0
-  new_array = []
+  coupons_array = []
   while i < cart.length
     x = 0
     orig_count = cart[i][:count]
@@ -12,22 +11,22 @@ def apply_coupons(cart, coupons)
         extra = cart[i][:count] - coupons[x][:num]
         if extra > 0
           cart[i][:count] = extra
-          new_array << cart[i]
+          coupons_array << cart[i]
         else
           cart[i][:count] = 0
-          new_array << cart[i]
+          coupons_array << cart[i]
         end  
         item_w_coupon = {item: "#{coupons[x][:item]} W/COUPON", price: coupons[x][:cost]/coupons[x][:num], clearance: cart[i][:clearance], count: coupons[x][:num]} 
-        new_array << item_w_coupon
+        coupons_array << item_w_coupon
       end  
       x += 1 
     end
     if orig_count == cart[i][:count] #if no coupons applied
-      new_array << cart[i]
+      coupons_array << cart[i]
     end
     i += 1
   end
-  new_array
+  coupons_array
 end
 
 def apply_clearance(cart)
@@ -49,10 +48,8 @@ def checkout(cart, coupons)
   con_cart = consolidate_cart(cart)
   coup_cart = apply_coupons(con_cart, coupons)
   final_cart = apply_clearance(coup_cart)
-  
   i = 0
   subtotal = 0
-  
   while i < final_cart.length 
     num = final_cart[i][:price]*final_cart[i][:count]
     subtotal += num
